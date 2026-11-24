@@ -7,11 +7,40 @@ import { Leaderboard } from "./leaderboard.js";
 const $ = (id) => document.getElementById(id);
 
 const canvas = $("screen");
-const renderer = new Renderer(canvas, CONFIG.grid.cols, CONFIG.grid.rows);
-const stars = new Starfield(CONFIG.grid.cols, CONFIG.grid.rows);
+const isTouch = window.matchMedia("(pointer: coarse)").matches || "ontouchstart" in window;
+document.body.classList.toggle("touch", isTouch);
+
+// Grid size: the usual 60x34 on wide screens; on an upright phone use fewer, bigger
+// columns and as many rows as fit, so the game fills the screen.
+function pickGrid() {
+  const { cols, rows, portraitCols, maxRows } = CONFIG.grid;
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+  if (h < w * 1.15) return { cols, rows };
+  const cellW = w / portraitCols;
+  const fitRows = Math.floor(h / (cellW / 0.6));
+  return { cols: portraitCols, rows: Math.max(rows, Math.min(maxRows, fitRows)) };
+}
+
+let grid = pickGrid();
+const renderer = new Renderer(canvas, grid.cols, grid.rows);
+let stars = new Starfield(grid.cols, grid.rows);
 const input = new Input();
 const board = new Leaderboard(CONFIG.leaderboard);
-input.attachPointer(canvas);
+input.attachPointer($("stage"), canvas);
+
+function applyGrid() {
+  const next = pickGrid();
+  if (next.cols === grid.cols && next.rows === grid.rows) return;
+  grid = next;
+  renderer.setGrid(grid.cols, grid.rows);
+  stars = new Starfield(grid.cols, grid.rows);
+}
+
+// Menus follow rotation; a running game keeps its grid (the canvas just rescales).
+window.addEventListener("resize", () => {
+  if (!game) applyGrid();
+});
 
 const panels = { home: $("home"), board: $("board"), gameover: $("gameover"), pause: $("pause") };
 let state = "home";
@@ -35,7 +64,12 @@ function startWaveFromUrl() {
 }
 
 function startGame() {
-  game = new Game(CONFIG, input, { onGameOver: gameOver, startWave: startWaveFromUrl() });
+  applyGrid();
+  game = new Game({ ...CONFIG, grid }, input, {
+    onGameOver: gameOver,
+    startWave: startWaveFromUrl(),
+    touch: isTouch,
+  });
   show("game");
 }
 

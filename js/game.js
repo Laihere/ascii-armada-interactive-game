@@ -3,7 +3,8 @@ import {
   bulletChar, pointInRect, rectsOverlap, explosion, floatText,
 } from "./entities.js";
 
-const STEP = 1 / 120; // fixed physics step so fast bullets never skip a sprite
+const STEP = 1 / 120;
+const DRAG_SENSITIVITY = 1.25; // ship moves a bit further than the finger // fixed physics step so fast bullets never skip a sprite
 
 // Enemy scaling for a wave. python/balance.py mirrors this formula; keep them in sync.
 export function waveStats(cfg, wave, upgradeLevel = 0) {
@@ -28,7 +29,8 @@ export function waveStats(cfg, wave, upgradeLevel = 0) {
 }
 
 export class Game {
-  constructor(cfg, input, { onGameOver, startWave = 1 } = {}) {
+  constructor(cfg, input, { onGameOver, startWave = 1, touch = false } = {}) {
+    this.touch = touch;
     this.cfg = cfg;
     this.input = input;
     this.onGameOver = onGameOver;
@@ -90,7 +92,8 @@ export class Game {
   spawnWave() {
     const { count, elites, hpMul } = this.stats;
     const e = this.cfg.enemy;
-    const perRow = 8;
+    // leave ~4 cells each side for the sway; 8 per row on the 60-col grid, fewer on narrow phones
+    const perRow = Math.max(4, Math.min(8, Math.floor((this.cols - 13) / 6) + 1));
     const kinds = [];
     for (let i = 0; i < count; i++) {
       kinds.push(i < elites ? "elite" : (i % 2 ? "wing" : "drone"));
@@ -176,15 +179,10 @@ export class Game {
     const len = Math.hypot(x, y) || 1;
     pl.x += (x / len) * cfg.speed * h;
     pl.y += (y / len) * cfg.speed * ASPECT * h;
-    // touch: glide toward the finger target
-    const t = this.input.touchTarget;
-    if (t) {
-      const tx = t.x * this.cols - pl.w / 2;
-      const ty = t.y * this.rows - 3;
-      const max = cfg.speed * 1.4 * h;
-      pl.x += Math.max(-max, Math.min(max, tx - pl.x));
-      pl.y += Math.max(-max * ASPECT, Math.min(max * ASPECT, ty - pl.y));
-    }
+    // touch / mouse drag: the ship follows the finger's movement (finger never covers it)
+    const d = this.input.consumeDrag();
+    pl.x += d.x * this.cols * DRAG_SENSITIVITY;
+    pl.y += d.y * this.rows * DRAG_SENSITIVITY;
     pl.x = Math.max(0, Math.min(this.cols - pl.w, pl.x));
     pl.y = Math.max(2, Math.min(this.rows - pl.h - 2, pl.y));
     if (pl.invuln > 0) pl.invuln -= h;
@@ -505,7 +503,9 @@ export class Game {
     const waveTxt = "WAVE " + this.wave;
     r.text(Math.floor((this.cols - waveTxt.length) / 2), 0, waveTxt, COLORS.accent);
     const hearts = "♥".repeat(Math.max(0, pl.hp)) + "·".repeat(Math.max(0, cfg.maxHp - pl.hp));
-    r.text(this.cols - 1 - hearts.length - 3, 0, "HP " + hearts, COLORS.danger);
+    // on phones the pause button sits top-right, so hearts go to the bottom row
+    const hpY = this.touch ? this.rows - 1 : 0;
+    r.text(this.cols - 1 - hearts.length - 3, hpY, "HP " + hearts, COLORS.danger);
 
     const y = this.rows - 1;
     const bar = (n, max) => "#".repeat(n) + "-".repeat(max - n);
@@ -514,6 +514,6 @@ export class Game {
     r.text(12, y, "RPD", COLORS.hudDim);
     r.text(16, y, bar(pl.rapid, this.maxRapid), POWERUPS.R.color);
     if (pl.shield) r.text(23, y, "SHIELD", COLORS.shield);
-    r.text(this.cols - 16, y, "P/Esc = pause", COLORS.hudDim);
+    if (!this.touch && this.cols >= 50) r.text(this.cols - 16, y, "P/Esc = pause", COLORS.hudDim);
   }
 }

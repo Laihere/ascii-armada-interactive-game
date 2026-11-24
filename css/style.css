@@ -16,7 +16,19 @@ html, body {
   color: var(--fg);
   font-family: var(--font);
   overflow: hidden;
+  overscroll-behavior: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
 }
+#stage { touch-action: none; }
+input { -webkit-user-select: text; user-select: text; }
+
+/* show the right control hints */
+.touch-only { display: none; }
+body.touch .touch-only { display: block; }
+body.touch .kbd-only { display: none; }
 
 #stage {
   position: relative;
@@ -135,3 +147,21 @@ h2 { margin: 0; color: var(--accent); letter-spacing: 0.15em; }
 }
 .pause-btn:hover, .pause-btn:focus-visible { color: var(--fg); border-color: var(--fg); outline: none; }
 #pause { background: rgba(5, 7, 10, 0.55); }
+
+/* phones */
+body.touch .pause-btn {
+  top: max(0.5rem, env(safe-area-inset-top));
+  right: max(0.5rem, env(safe-area-inset-right));
+  min-width: 2.9rem;
+  min-height: 2.9rem;
+  font-size: 1.1rem;
+  background: rgba(5, 7, 10, 0.6);
+}
+@media (max-width: 520px) {
+  .btn { font-size: 1rem; min-width: 11rem; padding: 0.7rem 1rem; }
+  .menu.row { flex-wrap: wrap; }
+  .menu.row .btn { min-width: 6rem; }
+  .scores th, .scores td { padding: 0.3rem 0.5rem; }
+  h2 { font-size: 1.2rem; }
+  #name-input { font-size: 16px; } /* 16px stops iOS zooming into the field */
+}

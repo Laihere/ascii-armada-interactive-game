@@ -23,9 +23,11 @@ Your ship fires by itself. Dodge, collect upgrades and see how many waves you ca
 
 | Action | Keys |
 | --- | --- |
-| Move | Arrow keys or W A S D (or drag with mouse / finger) |
+| Move | Arrow keys or W A S D, or drag anywhere with a finger / mouse (the ship follows your finger's movement) |
 | Shoot | Automatic |
 | Pause | P, Esc, or the `II` button |
+
+On a phone held upright the play area becomes taller and narrower to fill the screen.
 
 ### Rules
 

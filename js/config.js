@@ -2,7 +2,9 @@
 export const CONFIG = {
   "grid": {
     "cols": 60,
-    "rows": 34
+    "rows": 34,
+    "portraitCols": 42,
+    "maxRows": 64
   },
   "player": {
     "maxHp": 3,
