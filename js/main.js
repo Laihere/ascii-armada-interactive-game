@@ -2,6 +2,7 @@ import { CONFIG } from "./config.js";
 import { Renderer, Starfield } from "./render.js";
 import { Input } from "./input.js";
 import { Game } from "./game.js";
+import { Leaderboard } from "./leaderboard.js";
 
 const $ = (id) => document.getElementById(id);
 
@@ -9,6 +10,7 @@ const canvas = $("screen");
 const renderer = new Renderer(canvas, CONFIG.grid.cols, CONFIG.grid.rows);
 const stars = new Starfield(CONFIG.grid.cols, CONFIG.grid.rows);
 const input = new Input();
+const board = new Leaderboard(CONFIG.leaderboard);
 input.attachPointer(canvas);
 
 const panels = { home: $("home"), board: $("board"), gameover: $("gameover"), pause: $("pause") };
@@ -39,9 +41,53 @@ function startGame() {
 
 function gameOver(result) {
   lastResult = result;
+  game = null;
   $("go-score").textContent = result.score;
   $("go-wave").textContent = result.wave;
+  const top = board.load()[0];
+  $("go-note").textContent = !board.qualifies(result.score) ? "Not quite top " + CONFIG.leaderboard.size + " this time."
+    : !top || result.score > top.score ? "NEW HIGH SCORE!" : "You made the leaderboard!";
+  $("name-error").textContent = "";
+  $("name-input").value = board.lastName();
   show("gameover");
+  $("name-input").focus();
+  $("name-input").select();
+}
+
+function showBoard(highlightId = null, message = "") {
+  const rows = board.load();
+  const body = $("board-rows");
+  body.replaceChildren();
+  rows.forEach((r, i) => {
+    const tr = document.createElement("tr");
+    if (r.id && r.id === highlightId) tr.className = "me";
+    for (const v of [i + 1, r.name, r.score, r.wave ?? "-"]) {
+      const td = document.createElement("td");
+      td.textContent = String(v); // never innerHTML: names are user input
+      tr.appendChild(td);
+    }
+    body.appendChild(tr);
+  });
+  $("board-empty").classList.toggle("hidden", rows.length > 0);
+  $("board-msg").textContent = message;
+  $("board-msg").classList.toggle("hidden", !message);
+  show("board");
+  $("btn-board-back").focus();
+}
+
+function saveScore(e) {
+  e.preventDefault();
+  if (!lastResult) return;
+  const raw = $("name-input").value;
+  const err = board.validate(raw);
+  if (err) {
+    $("name-error").textContent = err;
+    $("name-input").focus();
+    return;
+  }
+  const { rank, id } = board.add(raw, lastResult.score, lastResult.wave);
+  lastResult = null;
+  showBoard(id, rank ? `${raw.trim()} placed #${rank}!` : `${raw.trim()}: not in the top ${CONFIG.leaderboard.size} this time.`);
 }
 
 function togglePause() {
@@ -56,16 +102,23 @@ function quitToMenu() {
 
 input.onPause = togglePause;
 $("btn-new").addEventListener("click", startGame);
-$("btn-board").addEventListener("click", () => show("board"));
+$("btn-board").addEventListener("click", () => showBoard());
 $("btn-board-back").addEventListener("click", () => show("home"));
+$("btn-board-play").addEventListener("click", startGame);
 $("btn-pause").addEventListener("click", togglePause);
 $("btn-resume").addEventListener("click", togglePause);
 $("btn-quit").addEventListener("click", quitToMenu);
-$("name-form").addEventListener("submit", (e) => {
-  e.preventDefault();
+$("name-form").addEventListener("submit", saveScore);
+$("btn-skip").addEventListener("click", () => {
+  lastResult = null;
   quitToMenu();
 });
-$("btn-skip").addEventListener("click", quitToMenu);
+$("btn-board-clear").addEventListener("click", () => {
+  if (confirm("Clear all scores on this browser?")) {
+    board.clear();
+    showBoard();
+  }
+});
 
 // Pause automatically when the tab is hidden
 document.addEventListener("visibilitychange", () => {

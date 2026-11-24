@@ -116,6 +116,8 @@ h2 { margin: 0; color: var(--accent); letter-spacing: 0.15em; }
 .scores th:nth-child(3), .scores th:nth-child(4) { text-align: right; }
 .scores tr.me td { color: var(--bg); background: var(--accent); }
 .scores tr:nth-child(1) td:first-child { color: var(--accent); }
+.scores tr.me td:first-child { color: var(--bg); }
+#go-note { color: var(--accent); }
 
 .pu-p { color: #5ce1ff; } .pu-r { color: #ffe066; } .pu-s { color: #6fc3ff; } .pu-h { color: #ff7b9c; }
 .hint b { font-weight: normal; }

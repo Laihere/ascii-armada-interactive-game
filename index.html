@@ -35,13 +35,16 @@
     <!-- Leaderboard -->
     <section id="board" class="panel hidden">
       <h2>// LEADERBOARD</h2>
+      <p id="board-msg" class="big hidden"></p>
       <table class="scores">
         <thead><tr><th>#</th><th>PILOT</th><th>SCORE</th><th>WAVE</th></tr></thead>
         <tbody id="board-rows"></tbody>
       </table>
       <p id="board-empty" class="hint hidden">No scores yet. Be the first!</p>
+      <p class="hint">Scores are saved in this browser only.</p>
       <nav class="menu row">
         <button id="btn-board-back" class="btn">&lt; BACK</button>
+        <button id="btn-board-play" class="btn">NEW GAME</button>
         <button id="btn-board-clear" class="btn danger">CLEAR</button>
       </nav>
     </section>
@@ -62,6 +65,7 @@
     <section id="gameover" class="panel hidden">
       <h2>GAME OVER</h2>
       <p class="big">SCORE <span id="go-score">0</span> &middot; WAVE <span id="go-wave">1</span></p>
+      <p id="go-note" class="hint"></p>
       <form id="name-form" autocomplete="off">
         <label for="name-input">PILOT NAME</label>
         <input id="name-input" maxlength="12" spellcheck="false">
