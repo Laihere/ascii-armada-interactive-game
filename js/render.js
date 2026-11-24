@@ -95,8 +95,8 @@ export class Starfield {
       x: Math.floor(Math.random() * this.cols),
       y,
       speed: 2 + layer * 10,
-      ch: layer > 0.8 ? "*" : layer > 0.45 ? "+" : ".",
-      color: layer > 0.8 ? "#d8e6ff" : layer > 0.45 ? "#6f86a8" : "#34445c",
+      ch: layer > 0.8 ? "+" : ".", // no "*": that's an elite bullet
+      color: layer > 0.8 ? "#5b6f8c" : layer > 0.45 ? "#6f86a8" : "#34445c",
     };
   }
 

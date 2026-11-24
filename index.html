@@ -28,7 +28,8 @@
         <button id="btn-new" class="btn" autofocus>&gt; NEW GAME</button>
         <button id="btn-board" class="btn">&gt; LEADERBOARD</button>
       </nav>
-      <p class="hint">Arrows / WASD to move &middot; ship fires by itself &middot; P / Esc to pause</p>
+      <p class="hint">Arrows / WASD (or drag) to move &middot; ship fires by itself &middot; P / Esc to pause</p>
+      <p class="hint">Grab drops: <b class="pu-p">[P]</b> power &middot; <b class="pu-r">[R]</b> rapid &middot; <b class="pu-s">[S]</b> shield &middot; <b class="pu-h">[+]</b> repair</p>
     </section>
 
     <!-- Leaderboard -->
@@ -44,6 +45,18 @@
         <button id="btn-board-clear" class="btn danger">CLEAR</button>
       </nav>
     </section>
+
+    <!-- Pause -->
+    <section id="pause" class="panel hidden">
+      <h2>PAUSED</h2>
+      <nav class="menu">
+        <button id="btn-resume" class="btn">&gt; RESUME</button>
+        <button id="btn-quit" class="btn">&gt; QUIT TO MENU</button>
+      </nav>
+      <p class="hint">P / Esc to resume</p>
+    </section>
+
+    <button id="btn-pause" class="pause-btn hidden" aria-label="Pause">II</button>
 
     <!-- Game over / name entry -->
     <section id="gameover" class="panel hidden">

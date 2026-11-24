@@ -12,6 +12,7 @@ export class Input {
     this.held = { left: false, right: false, up: false, down: false };
     this.onPause = null;
     this.active = false; // only swallow keys while the game screen is up
+    this.touchTarget = null; // {x, y} in 0..1 of the canvas while dragging
 
     window.addEventListener("keydown", (e) => {
       if (!this.active) return;
@@ -31,7 +32,31 @@ export class Input {
     window.addEventListener("blur", () => this.reset());
   }
 
+  // Drag on the canvas (finger or mouse) to steer: the ship glides toward the pointer.
+  attachPointer(canvas) {
+    const update = (e) => {
+      const r = canvas.getBoundingClientRect();
+      this.touchTarget = {
+        x: Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)),
+        y: Math.min(1, Math.max(0, (e.clientY - r.top) / r.height)),
+      };
+    };
+    canvas.addEventListener("pointerdown", (e) => {
+      if (!this.active) return;
+      canvas.setPointerCapture(e.pointerId);
+      update(e);
+      e.preventDefault();
+    });
+    canvas.addEventListener("pointermove", (e) => {
+      if (this.active && this.touchTarget) update(e);
+    });
+    const end = () => { this.touchTarget = null; };
+    canvas.addEventListener("pointerup", end);
+    canvas.addEventListener("pointercancel", end);
+  }
+
   reset() {
+    this.touchTarget = null;
     for (const k in this.held) this.held[k] = false;
   }
 

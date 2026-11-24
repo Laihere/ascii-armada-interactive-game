@@ -1,5 +1,8 @@
 {
-  "grid": { "cols": 60, "rows": 34 },
+  "grid": {
+    "cols": 60,
+    "rows": 34
+  },
   "player": {
     "maxHp": 3,
     "speed": 28,
@@ -11,8 +14,18 @@
     "bulletSpeed": 45
   },
   "enemy": {
-    "normal": { "hp": 2, "score": 10, "fireChance": 0.25, "bulletSpeed": 14 },
-    "elite": { "hp": 9, "score": 50, "fireChance": 0.6, "bulletSpeed": 16 }
+    "normal": {
+      "hp": 2,
+      "score": 10,
+      "fireChance": 0.25,
+      "bulletSpeed": 14
+    },
+    "elite": {
+      "hp": 9,
+      "score": 50,
+      "fireChance": 0.6,
+      "bulletSpeed": 16
+    }
   },
   "waves": {
     "baseEnemies": 8,
@@ -26,13 +39,27 @@
     "bulletSpeedGrowth": 0.04,
     "maxBulletSpeedFactor": 2.0,
     "powerFactor": 0.06,
-    "bannerTime": 1.8
+    "bannerTime": 1.8,
+    "diveFromWave": 4,
+    "diveEvery": 3.5,
+    "minDiveEvery": 1.0,
+    "diveSpeed": 13,
+    "aimedFromWave": 5
   },
   "drops": {
     "normalChance": 0.06,
     "eliteChance": 0.45,
     "fallSpeed": 7,
-    "weights": { "P": 4, "R": 3, "S": 2, "+": 2 }
+    "weights": {
+      "P": 4,
+      "R": 3,
+      "S": 2,
+      "+": 2
+    }
   },
-  "leaderboard": { "size": 10, "nameMin": 3, "nameMax": 12 }
+  "leaderboard": {
+    "size": 10,
+    "nameMin": 3,
+    "nameMax": 12
+  }
 }

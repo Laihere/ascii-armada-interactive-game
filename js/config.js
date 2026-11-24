@@ -40,7 +40,12 @@ export const CONFIG = {
     "bulletSpeedGrowth": 0.04,
     "maxBulletSpeedFactor": 2.0,
     "powerFactor": 0.06,
-    "bannerTime": 1.8
+    "bannerTime": 1.8,
+    "diveFromWave": 4,
+    "diveEvery": 3.5,
+    "minDiveEvery": 1.0,
+    "diveSpeed": 13,
+    "aimedFromWave": 5
   },
   "drops": {
     "normalChance": 0.06,
