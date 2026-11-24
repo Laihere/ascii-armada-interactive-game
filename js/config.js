@@ -64,5 +64,8 @@ export const CONFIG = {
     "size": 10,
     "nameMin": 3,
     "nameMax": 12
+  },
+  "share": {
+    "url": "https://laihere.github.io/ascii-armada-interactive-game/"
   }
 };

@@ -42,7 +42,7 @@ window.addEventListener("resize", () => {
   if (!game) applyGrid();
 });
 
-const panels = { home: $("home"), board: $("board"), gameover: $("gameover"), pause: $("pause") };
+const panels = { home: $("home"), board: $("board"), gameover: $("gameover"), pause: $("pause"), share: $("share") };
 let state = "home";
 let game = null;
 let lastResult = null;
@@ -134,7 +134,39 @@ function quitToMenu() {
   show("home");
 }
 
+// ---- share / QR (link + QR image are made by python/make_qr.py) ----
+const shareUrl = (CONFIG.share && CONFIG.share.url) || location.origin + location.pathname;
+
+function showShare() {
+  $("share-url").textContent = shareUrl;
+  $("share-msg").textContent = "";
+  $("btn-native-share").classList.toggle("hidden", !navigator.share);
+  show("share");
+  $("btn-share-back").focus();
+}
+
+async function copyLink() {
+  try {
+    await navigator.clipboard.writeText(shareUrl);
+    $("share-msg").textContent = "Link copied!";
+  } catch {
+    $("share-msg").textContent = "Couldn't copy - press and hold the link above to copy it.";
+  }
+}
+
+async function nativeShare() {
+  try {
+    await navigator.share({ title: "ASCII ARMADA", text: "Can you beat my score?", url: shareUrl });
+  } catch {
+    /* user closed the share sheet */
+  }
+}
+
 input.onPause = togglePause;
+$("btn-share").addEventListener("click", showShare);
+$("btn-share-back").addEventListener("click", () => show("home"));
+$("btn-copy").addEventListener("click", copyLink);
+$("btn-native-share").addEventListener("click", nativeShare);
 $("btn-new").addEventListener("click", startGame);
 $("btn-board").addEventListener("click", () => showBoard());
 $("btn-board-back").addEventListener("click", () => show("home"));

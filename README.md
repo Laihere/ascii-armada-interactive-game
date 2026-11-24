@@ -54,6 +54,11 @@ On a phone held upright the play area becomes taller and narrower to fill the sc
 At game over, enter a pilot name: 3–12 characters, letters, numbers and `_` only. The top 10 scores are
 saved **in your browser** (localStorage), so each device/browser has its own board.
 
+### Play on other phones
+
+Home → **PLAY ON YOUR PHONE** shows a QR code for the live game, plus Copy / Share buttons.
+`assets/qr.png` is a large copy to print or send in a chat.
+
 ### Practice mode
 
 Add `?wave=N` to the address to start at wave N with matching upgrades, e.g. `index.html?wave=10`.
@@ -102,12 +107,23 @@ wave  enemies  elites  normal_hp  elite_hp  shots_per_s  bullet_speed  dive_ever
   10       22       9          4        19         33.5          19.0           2.3    yes         5800
 ```
 
+### QR code
+
+```bash
+pip install segno                 # one-time; small BSD-licensed QR library
+python3 python/make_qr.py         # works out the Pages link from the git remote
+python3 python/make_qr.py https://<user>.github.io/<repo>/   # or give the link
+```
+
+This writes `assets/qr.svg` (used in the game) and `assets/qr.png` (big, for printing), saves the link in
+`config.json`, rebuilds `js/config.js`, and prints the QR in the terminal. **Re-run it after renaming the repo.**
+
 Things to try in `config.json`: `player.maxHp`, `player.speed`, `waves.hpGrowth`, `waves.eliteFromWave`,
 `drops.weights`. Check the table, rebuild, then reload the page.
 
 `wave_stats()` in `python/balance.py` uses the same formula as `waveStats()` in `js/game.js`. If you change one, change the other.
 
-No packages to install: the tools use only the Python standard library (Python 3.9+).
+`build_config.py` and `balance.py` use only the Python standard library (Python 3.9+). `make_qr.py` also needs `segno`.
 
 ## Project layout
 
@@ -124,4 +140,11 @@ js/config.js          GENERATED from config.json (don't edit by hand)
 config.json           all balance numbers
 python/build_config.py  config.json -> js/config.js
 python/balance.py       wave-by-wave scaling table
+python/make_qr.py       QR code + share link
+assets/qr.svg, qr.png   generated QR codes
 ```
+
+## Credits
+
+- QR codes generated with [segno](https://github.com/heuer/segno) (BSD-3-Clause), used only by `python/make_qr.py`.
+  The game itself uses no third-party code.

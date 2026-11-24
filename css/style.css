@@ -165,3 +165,21 @@ body.touch .pause-btn {
   h2 { font-size: 1.2rem; }
   #name-input { font-size: 16px; } /* 16px stops iOS zooming into the field */
 }
+
+.qr {
+  width: min(220px, 60vw);
+  height: auto;
+  padding: 6px;
+  background: #fff;
+  image-rendering: pixelated;
+  box-shadow: 0 0 24px rgba(120, 255, 160, 0.25);
+}
+.share-url {
+  margin: 0;
+  max-width: 92vw;
+  color: var(--accent);
+  font-size: 0.85rem;
+  word-break: break-all;
+  -webkit-user-select: text;
+  user-select: text;
+}

@@ -31,6 +31,7 @@
       <nav class="menu">
         <button id="btn-new" class="btn" autofocus>&gt; NEW GAME</button>
         <button id="btn-board" class="btn">&gt; LEADERBOARD</button>
+        <button id="btn-share" class="btn">&gt; PLAY ON YOUR PHONE</button>
       </nav>
       <p class="hint kbd-only">Arrows / WASD (or drag) to move &middot; ship fires by itself &middot; P / Esc to pause</p>
       <p class="hint touch-only">Drag anywhere to move &middot; ship fires by itself &middot; II to pause</p>
@@ -51,6 +52,19 @@
         <button id="btn-board-back" class="btn">&lt; BACK</button>
         <button id="btn-board-play" class="btn">NEW GAME</button>
         <button id="btn-board-clear" class="btn danger">CLEAR</button>
+      </nav>
+    </section>
+
+    <!-- Share / QR -->
+    <section id="share" class="panel hidden">
+      <h2>// SCAN TO PLAY</h2>
+      <img id="share-qr" class="qr" src="assets/qr.svg" alt="QR code linking to the game" width="220" height="220">
+      <p id="share-url" class="share-url"></p>
+      <p id="share-msg" class="hint" aria-live="polite"></p>
+      <nav class="menu row">
+        <button id="btn-share-back" class="btn">&lt; BACK</button>
+        <button id="btn-copy" class="btn">COPY LINK</button>
+        <button id="btn-native-share" class="btn hidden">SHARE</button>
       </nav>
     </section>
 
