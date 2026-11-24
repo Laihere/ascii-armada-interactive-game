@@ -8,18 +8,26 @@ export class Renderer {
   constructor(canvas, cols, rows) {
     this.canvas = canvas;
     this.ctx = canvas.getContext("2d");
+    this.setGrid(cols, rows);
+    window.addEventListener("resize", () => this.resize());
+  }
+
+  // Change the grid size (e.g. taller grid on a portrait phone).
+  setGrid(cols, rows) {
     this.cols = cols;
     this.rows = rows;
-    this.chars = new Array(cols * rows).fill(" ");
-    this.colors = new Array(cols * rows).fill("#fff");
+    const n = cols * rows;
+    this.chars = new Array(n).fill(" ");
+    this.colors = new Array(n).fill("#fff");
+    this.bgs = new Array(n).fill(null); // optional glow box behind a cell
+    this.bold = new Uint8Array(n);
     this.resize();
-    window.addEventListener("resize", () => this.resize());
   }
 
   resize() {
     const dpr = window.devicePixelRatio || 1;
-    const availW = window.innerWidth - 8;
-    const availH = window.innerHeight - 8;
+    const availW = window.innerWidth - 4;
+    const availH = window.innerHeight - 4;
     // cell height limited by both axes
     const cellH = Math.max(8, Math.floor(Math.min(availH / this.rows, availW / (this.cols * CHAR_ASPECT))));
     this.cellH = cellH;
@@ -31,22 +39,29 @@ export class Renderer {
     this.canvas.width = Math.round(w * dpr);
     this.canvas.height = Math.round(h * dpr);
     this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    this.ctx.font = `${Math.floor(cellH * 0.92)}px ${FONT_STACK}`;
+    const size = Math.floor(cellH * 0.92);
+    this.fontNormal = `${size}px ${FONT_STACK}`;
+    this.fontBold = `bold ${Math.floor(cellH * 1.05)}px ${FONT_STACK}`;
     this.ctx.textBaseline = "top";
     this.ctx.textAlign = "center";
   }
 
   clear() {
     this.chars.fill(" ");
+    this.bgs.fill(null);
+    this.bold.fill(0);
   }
 
-  put(x, y, ch, color) {
+  // style: { bg: "css colour" for a glow box behind the char, bold: true }
+  put(x, y, ch, color, style) {
     x = Math.round(x);
     y = Math.round(y);
     if (x < 0 || y < 0 || x >= this.cols || y >= this.rows) return;
     const i = y * this.cols + x;
     this.chars[i] = ch;
     this.colors[i] = color;
+    this.bgs[i] = style && style.bg ? style.bg : null;
+    this.bold[i] = style && style.bold ? 1 : 0;
   }
 
   // Draw a string; spaces are transparent (they don't overwrite).
@@ -67,15 +82,28 @@ export class Renderer {
 
   flush() {
     const { ctx, cols, rows, cellW, cellH } = this;
+    const n = cols * rows;
     ctx.fillStyle = "#05070a";
     ctx.fillRect(0, 0, cols * cellW, rows * cellH);
-    for (let y = 0; y < rows; y++) {
-      for (let x = 0; x < cols; x++) {
-        const i = y * cols + x;
+
+    // 1) glow boxes (bullets)
+    for (let i = 0; i < n; i++) {
+      const bg = this.bgs[i];
+      if (!bg || this.chars[i] === " ") continue;
+      const x = (i % cols) * cellW;
+      const y = Math.floor(i / cols) * cellH;
+      ctx.fillStyle = bg;
+      ctx.fillRect(x + cellW * 0.08, y + cellH * 0.04, cellW * 0.84, cellH * 0.92);
+    }
+    // 2) normal chars, 3) bold chars (font switch only once)
+    for (const pass of [0, 1]) {
+      ctx.font = pass ? this.fontBold : this.fontNormal;
+      const dy = pass ? -cellH * 0.04 : 1;
+      for (let i = 0; i < n; i++) {
         const ch = this.chars[i];
-        if (ch === " ") continue;
+        if (ch === " " || this.bold[i] !== pass) continue;
         ctx.fillStyle = this.colors[i];
-        ctx.fillText(ch, x * cellW + cellW / 2, y * cellH + 1);
+        ctx.fillText(ch, (i % cols) * cellW + cellW / 2, Math.floor(i / cols) * cellH + dy);
       }
     }
   }

@@ -7,7 +7,7 @@ Your ship fires by itself. Dodge, collect upgrades and see how many waves you ca
    \o/   /-\   \o/        /=O=\
     v    \v/    v         |###|
                            \V/
-            !        *
+            !        @
                  |
                  A
                 /#\
@@ -30,6 +30,7 @@ Your ship fires by itself. Dodge, collect upgrades and see how many waves you ca
 ### Rules
 
 - You have **3 HP** (♥♥♥). After a hit you blink and can't be hit again for a moment.
+- Your shots glow **cyan**. Enemy shots glow **red** (`!`, aimed `o`), elite shots glow **gold** (`@`).
 - **Normal enemies** (`\o/` `/-\`) shoot straight down.
 - **Elite enemies** (`/=O=\`) arrive from wave 3. They have more HP and fire 3-way spreads.
 - From wave 4, enemies **dive** at you. From wave 5, some shots are **aimed** at you.

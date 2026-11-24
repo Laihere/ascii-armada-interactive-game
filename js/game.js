@@ -298,15 +298,15 @@ export class Game {
     if (e.elite) {
       if (this.stats.aimed && Math.random() < 0.5) {
         const [vx, vy] = aim();
-        for (const off of [-4, 0, 4]) this.enemyBullets.push({ x: bx, y: by, vx: vx + off, vy, ch: "*", color: COLORS.eliteBullet });
+        for (const off of [-4, 0, 4]) this.enemyBullets.push({ x: bx, y: by, vx: vx + off, vy, ch: "@", color: COLORS.eliteBullet, glow: COLORS.eliteGlow });
       } else {
-        for (const vx of [-7, 0, 7]) this.enemyBullets.push({ x: bx, y: by, vx, vy: speed, ch: "*", color: COLORS.eliteBullet });
+        for (const vx of [-7, 0, 7]) this.enemyBullets.push({ x: bx, y: by, vx, vy: speed, ch: "@", color: COLORS.eliteBullet, glow: COLORS.eliteGlow });
       }
     } else if (this.stats.aimed && Math.random() < 0.35) {
       const [vx, vy] = aim();
-      this.enemyBullets.push({ x: bx, y: by, vx, vy, ch: "o", color: COLORS.enemyBullet });
+      this.enemyBullets.push({ x: bx, y: by, vx, vy, ch: "o", color: COLORS.enemyBullet, glow: COLORS.enemyGlow });
     } else {
-      this.enemyBullets.push({ x: bx, y: by, vx: 0, vy: speed, ch: "!", color: COLORS.enemyBullet });
+      this.enemyBullets.push({ x: bx, y: by, vx: 0, vy: speed, ch: "!", color: COLORS.enemyBullet, glow: COLORS.enemyGlow });
     }
   }
 
@@ -464,8 +464,13 @@ export class Game {
       }
     }
 
-    for (const b of this.bullets) r.put(b.x + sx, b.y, bulletChar(b.vx, b.vy), COLORS.bullet);
-    for (const b of this.enemyBullets) r.put(b.x + sx, b.y, b.ch, b.color);
+    for (const b of this.bullets) {
+      r.put(b.x + sx - b.vx * 0.03, b.y + 1, ":", COLORS.bulletTrail); // short trail
+    }
+    for (const b of this.bullets) {
+      r.put(b.x + sx, b.y, bulletChar(b.vx, b.vy), COLORS.bullet, { bg: COLORS.bulletGlow, bold: true });
+    }
+    for (const b of this.enemyBullets) r.put(b.x + sx, b.y, b.ch, b.color, { bg: b.glow, bold: true });
 
     if (pl.alive && !(pl.invuln > 0 && Math.floor(pl.invuln * 12) % 2 === 0)) {
       r.sprite(pl.x + sx, pl.y, PLAYER.sprite, COLORS.player);
