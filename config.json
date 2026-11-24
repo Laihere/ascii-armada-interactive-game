@@ -1,0 +1,38 @@
+{
+  "grid": { "cols": 60, "rows": 34 },
+  "player": {
+    "maxHp": 3,
+    "speed": 28,
+    "fireInterval": 0.26,
+    "minFireInterval": 0.09,
+    "rapidStep": 0.035,
+    "maxPower": 5,
+    "invulnTime": 1.5,
+    "bulletSpeed": 45
+  },
+  "enemy": {
+    "normal": { "hp": 2, "score": 10, "fireChance": 0.25, "bulletSpeed": 14 },
+    "elite": { "hp": 9, "score": 50, "fireChance": 0.6, "bulletSpeed": 16 }
+  },
+  "waves": {
+    "baseEnemies": 8,
+    "enemiesPerWave": 1.5,
+    "maxEnemies": 28,
+    "eliteFromWave": 3,
+    "eliteShare": 0.08,
+    "maxEliteShare": 0.4,
+    "hpGrowth": 0.12,
+    "fireGrowth": 0.08,
+    "bulletSpeedGrowth": 0.04,
+    "maxBulletSpeedFactor": 2.0,
+    "powerFactor": 0.06,
+    "bannerTime": 1.8
+  },
+  "drops": {
+    "normalChance": 0.06,
+    "eliteChance": 0.45,
+    "fallSpeed": 7,
+    "weights": { "P": 4, "R": 3, "S": 2, "+": 2 }
+  },
+  "leaderboard": { "size": 10, "nameMin": 3, "nameMax": 12 }
+}

@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  <title>ASCII ARMADA</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="stage">
+    <canvas id="screen" aria-label="Game screen"></canvas>
+
+    <!-- Home -->
+    <section id="home" class="panel">
+      <pre class="title" aria-label="ASCII ARMADA">
+      ███   ████  ████ ███ ███
+     █   █ █     █      █   █
+     █████  ███  █      █   █
+     █   █     █ █      █   █
+     █   █ ████   ████ ███ ███
+
+ ███  ████  █   █  ███  ████   ███
+█   █ █   █ ██ ██ █   █ █   █ █   █
+█████ ████  █ █ █ █████ █   █ █████
+█   █ █  █  █   █ █   █ █   █ █   █
+█   █ █   █ █   █ █   █ ████  █   █</pre>
+      <nav class="menu">
+        <button id="btn-new" class="btn" autofocus>&gt; NEW GAME</button>
+        <button id="btn-board" class="btn">&gt; LEADERBOARD</button>
+      </nav>
+      <p class="hint">Arrows / WASD to move &middot; ship fires by itself &middot; P / Esc to pause</p>
+    </section>
+
+    <!-- Leaderboard -->
+    <section id="board" class="panel hidden">
+      <h2>// LEADERBOARD</h2>
+      <table class="scores">
+        <thead><tr><th>#</th><th>PILOT</th><th>SCORE</th><th>WAVE</th></tr></thead>
+        <tbody id="board-rows"></tbody>
+      </table>
+      <p id="board-empty" class="hint hidden">No scores yet. Be the first!</p>
+      <nav class="menu row">
+        <button id="btn-board-back" class="btn">&lt; BACK</button>
+        <button id="btn-board-clear" class="btn danger">CLEAR</button>
+      </nav>
+    </section>
+
+    <!-- Game over / name entry -->
+    <section id="gameover" class="panel hidden">
+      <h2>GAME OVER</h2>
+      <p class="big">SCORE <span id="go-score">0</span> &middot; WAVE <span id="go-wave">1</span></p>
+      <form id="name-form" autocomplete="off">
+        <label for="name-input">PILOT NAME</label>
+        <input id="name-input" maxlength="12" spellcheck="false">
+        <p id="name-error" class="error" aria-live="polite"></p>
+        <nav class="menu row">
+          <button type="submit" class="btn">SAVE</button>
+          <button type="button" id="btn-skip" class="btn">SKIP</button>
+        </nav>
+      </form>
+    </section>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
